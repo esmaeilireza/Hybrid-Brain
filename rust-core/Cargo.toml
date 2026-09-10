@@ -1,13 +1,15 @@
-[package]
+﻿[package]
 name = "hybrid-brain-core"
 version = "0.1.0"
 edition = "2021"
-description = "Hot-loop neuronal simulation core — PyO3-ready, ARM64-friendly"
+description = "Hot-loop neuronal simulation core - PyO3-ready, ARM64-friendly"
 
-# ADR-002 constraint: from Week 12, every change must remain compatible with
-# cargo build --target aarch64-unknown-linux-gnu.
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-# None for now — add pyo3 only during the transition phase (Weeks 12–14)
+pyo3 = { version = "0.22", optional = true, features = ["extension-module"] }
+
+[features]
+default = []
+python-bindings = ["dep:pyo3"]
