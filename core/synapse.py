@@ -26,6 +26,7 @@ class SynapseGroup:
         n_post: int,
         params: dict,
         rng: np.random.Generator | None = None,
+        polarity: str | None = None,
     ) -> None:
         self.n_pre = n_pre
         self.n_post = n_post
@@ -49,11 +50,19 @@ class SynapseGroup:
         post_idx = self.rng.integers(0, n_post, size=n_conn)
         n_exc = int(self.exc_ratio * n_pre)
 
-        weights = np.where(
-            pre_idx < n_exc,
-            self.rng.uniform(0.7, 1.0, n_conn) * self.w_exc,
-            -self.rng.uniform(0.7, 1.0, n_conn) * self.w_inh,
-        )
+        # Polarity: "mixed" = sign by source index (biological mixture);
+        # "excitatory"/"inhibitory" = explicit sign for pure populations.
+        # Never rely on the caller to compensate for wrong signs.
+        mode = polarity or s.get("polarity", "mixed")
+        mag = self.rng.uniform(0.7, 1.0, n_conn)
+        if mode == "excitatory":
+            weights = mag * self.w_exc
+        elif mode == "inhibitory":
+            weights = -mag * self.w_inh
+        else:
+            weights = np.where(
+                pre_idx < n_exc, mag * self.w_exc, -mag * self.w_inh
+            )
         self.W = sparse.csr_matrix(
             (weights, (post_idx, pre_idx)), shape=(n_post, n_pre)
         )
