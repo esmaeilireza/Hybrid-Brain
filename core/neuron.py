@@ -86,11 +86,15 @@ class LifPopulation:
             #    (the regression this test suite is designed to catch).
             self.v[spiked_mask] = self.v_reset
 
-        # 6) Start refractory for spikers
-        self.refractory[spiked_mask] = self.refractory_steps
-
-        # 7) Decrement everyone
-        self.refractory = np.maximum(self.refractory - 1, 0)
+        # 6/7) Refractory: spikers get the FULL period; everyone else
+        #      counts down. (Decrementing spikers in the same tick made
+        #      the effective refractory 1 tick instead of 2 - this was
+        #      the dominant source of the f-I validation bias.)
+        self.refractory = np.where(
+            spiked_mask,
+            self.refractory_steps,
+            np.maximum(self.refractory - 1, 0),
+        )
 
         return spiked_mask
 
