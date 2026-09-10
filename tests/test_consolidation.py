@@ -1,10 +1,12 @@
 """Week 9 p2 - consolidation replay into value table."""
 import numpy as np
+import pytest
 
 from cognition.consolidation import Consolidation, ValueTable
 from cognition.memory import EpisodicMemory
 
 
+@pytest.mark.xfail(reason="ADR-005: consolidation suspended - replay magnitude corrupted online values (Week-11 A/B)")
 def test_replay_strengthens_rewarded_actions() -> None:
     mem = EpisodicMemory()
     for _ in range(30):

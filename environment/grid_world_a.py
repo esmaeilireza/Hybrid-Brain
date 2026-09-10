@@ -79,10 +79,15 @@ class GridWorldA:
 
     # --- World protocol ---
     def reset(self) -> None:
-        self.agent = (
-            int(self.rng.integers(0, self.size)),
-            int(self.rng.integers(0, self.size)),
-        )
+        # never start ON the goal (zero-step episodes, Month-3 finding)
+        while True:
+            agent = (
+                int(self.rng.integers(0, self.size)),
+                int(self.rng.integers(0, self.size)),
+            )
+            if agent != self.goal:
+                self.agent = agent
+                break
         self.pending_action = 0
         self._reward_buffer = 0.0
         self._steps = 0
