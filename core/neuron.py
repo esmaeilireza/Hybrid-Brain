@@ -41,6 +41,7 @@ class LifPopulation:
         self.v = np.full(n_neurons, self.v_rest, dtype=np.float64)
         self.refractory = np.zeros(n_neurons, dtype=np.int32)
         self.last_spike_frac = np.full(n_neurons, np.nan, dtype=np.float64)
+        self.last_spikes = np.zeros(n_neurons, dtype=bool)
 
         # Leak coefficient: v_new = v + leak * (v_rest - v + I)
         self._leak = self.dt / self.tau_m
@@ -96,9 +97,12 @@ class LifPopulation:
             np.maximum(self.refractory - 1, 0),
         )
 
+        self.last_spikes = spiked_mask
+
         return spiked_mask
 
     def reset(self) -> None:
         self.v[:] = self.v_rest
         self.refractory[:] = 0
         self.last_spike_frac[:] = np.nan
+        self.last_spikes[:] = False
