@@ -25,3 +25,13 @@
 | Month 3 | RPE + distance-delta shaping + entry-only novelty + fixed start | success 100%, mean 40 steps (training goals 78/80) |
 
 | Month 4 | decision agreement | 89% optimal agreement, System2-on-novel 94% |
+
+## Week 18 - Conditioned Avoidance (Month 5 first acceptance)
+- benchmarks/accept_avoidance.py v3 - A/B ablation, seed 42, GridWorld-A seed 11
+- R = greedy-path corridor cell; threat channel isolated from RL channel
+- Train: 77/80 both arms | Eval goals: 10/10 both arms
+- R-visits (deterministic eval): somatic ON = 0, OFF = 10
+- VERDICT: ACCEPTED - 100% avoidance, zero navigation cost
+- Harness lesson (3 versions): v1 false-positive -> competency gate rule;
+  v2 confound (punishment in agent.learn for both arms) -> isolated threat
+  channel; v3 valid. Acceptance numbers without baseline competence are noise.
