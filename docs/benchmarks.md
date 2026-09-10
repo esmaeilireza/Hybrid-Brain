@@ -11,3 +11,5 @@
 | Week 12-13 | neurons-only A/B | Python 34,641,728 vs Rust 94,381,471 neuron-ticks/s | speedup 2.7x |
 
 | Week 12-13 | neurons-only A/B | Python 28,290,456 vs Rust 77,402,376 neuron-ticks/s | speedup 2.7x |
+
+| Week 14 | neurons+synapses Python-only | 64,989,082 neuron-ticks/s (Rust combined pending PyO3, Week 15) |
