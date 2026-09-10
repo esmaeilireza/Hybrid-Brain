@@ -9,3 +9,5 @@
 | Month 3 | RPE + distance-delta shaping + entry-only novelty + fixed start | success 100%, mean 40 steps (training goals 78/80) |
 
 | Week 12-13 | neurons-only A/B | Python 34,641,728 vs Rust 94,381,471 neuron-ticks/s | speedup 2.7x |
+
+| Week 12-13 | neurons-only A/B | Python 28,290,456 vs Rust 77,402,376 neuron-ticks/s | speedup 2.7x |
