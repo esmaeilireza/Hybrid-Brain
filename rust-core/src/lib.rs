@@ -1,6 +1,4 @@
-//! Hybrid-Brain core — placeholder (Week 1).
-//! Activation phase: Weeks 12–14 (neurons.rs, synapses.rs, plasticity.rs)
-//! Constraint: no allocation in the hot loop — ARM64 compatible (ADR-002).
+//! Hybrid-Brain core - Rust acceleration layer (ADR-002 ARM64-friendly).
+pub mod neurons;
 
-/// Contract version — for future bit-for-bit A/B testing with Python.
-pub const CONTRACT_VERSION: &str = "0.1.0";
+pub const CONTRACT_VERSION: &str = "0.4.0";
