@@ -52,3 +52,7 @@ reward_pathway:
 logging:
   level: "INFO"
   spike_log: "data/logs/spikes.parquet"
+
+homeostasis:
+  scaling_interval_ticks: 100
+  target_row_sum: 60.0        # tuned so mean rate lands ~20-30 Hz

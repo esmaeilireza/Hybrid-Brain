@@ -5,6 +5,10 @@ from core.neural_network import NeuralNetwork
 
 from tests.test_plasticity import PARAMS
 
+# Homeostatic scaling would compensate the perturbations these tests
+# impose - they verify the inhibitory wiring, so scaling must be off.
+PARAMS = {**PARAMS, "homeostasis": {"enabled": False}}
+
 
 def test_network_ticks_and_produces_activity() -> None:
     net = NeuralNetwork(PARAMS, n_exc=100, n_inh=25, seed=1)

@@ -6,7 +6,7 @@ import numpy as np
 from scipy import sparse
 
 from core.neuron import LifPopulation
-from core.plasticity import STDP
+from core.plasticity import STDP, SynapticScaling
 from core.synapse import SynapseGroup
 
 
@@ -30,6 +30,7 @@ class NeuralNetwork:
 
         self.stdp_e2e = STDP(self.e2e, params)
         self.stdp_e2i = STDP(self.e2i, params)
+        self.scaling_e2e = SynapticScaling(self.e2e, params)
 
     def step(self, drive_exc: np.ndarray, drive_inh: np.ndarray | None = None):
         """One tick. Returns (spikes_exc, spikes_inh) boolean masks."""
@@ -46,4 +47,5 @@ class NeuralNetwork:
 
         self.stdp_e2e.step(s_e, s_e)
         self.stdp_e2i.step(s_e, s_i)
+        self.scaling_e2e.step()
         return s_e, s_i
