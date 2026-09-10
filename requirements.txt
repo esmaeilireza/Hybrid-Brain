@@ -1,0 +1,11 @@
+# Hybrid-Brain — Week 1 dependencies
+numpy>=1.26
+scipy>=1.11            # sparse connectome matrix
+matplotlib>=3.8        # 2D heatmap, Month 2
+pyyaml>=6.0            # brain_config.yaml
+pytest>=8.0            # synchronized tests from day one
+
+# --- Month 2+ (commented for now) ---
+# brian2>=4.5          # LIF validation
+# pyvista>=0.43        # 3D Point Cloud, Month 4+
+# torch>=2.2           # CNN, Month 6 (CPU version to start)

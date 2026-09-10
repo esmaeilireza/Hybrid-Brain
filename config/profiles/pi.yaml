@@ -1,0 +1,9 @@
+# í³Œ Raspberry Pi profile â€” PLACEHOLDER (ADR-002: deferred until hardware)
+# Warning: this profile is only a target document until the Pi is purchased; it is not executable yet.
+extends: "../brain_config.yaml"
+network:
+  n_neurons: 20000            # conservative ARM64 ceiling
+  backend: "rust"             # pure rust-core, no Python
+language:
+  adapter: "llama_cpp_tiny"   # Qwen2.5-0.5B Q4_K_M
+  max_ram_mb: 4000

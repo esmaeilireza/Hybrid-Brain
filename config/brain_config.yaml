@@ -1,0 +1,54 @@
+# ============================================================================
+# Hybrid-Brain — general configuration
+# Units: time=ms, voltage=mV, current=pA
+# Reference: Gerstner & Kistler, "Spiking Neuron Models"
+# ============================================================================
+
+simulation:
+  dt_ms: 1                    # tick loop resolution
+  max_sim_time_ms: 60000      # cap per run
+  seed: 42                    # reproducibility — never change without an ADR
+
+neuron:
+  model: "LIF"                # LIF | Izhikevich | HH
+  # --- LIF physiological parameters ---
+  tau_m_ms: 20.0              # membrane time constant
+  v_rest_mV: -65.0            # resting potential
+  v_threshold_mV: -55.0       # firing threshold
+  v_reset_mV: -70.0           # reset potential after spike
+  refractory_ms: 2.0          # refractory period
+  # --- Izhikevich (classic a,b,c,d; profiles in code) ---
+  izhikevich:
+    a: 0.02
+    b: 0.2
+    c: -65.0
+    d: 8.0
+
+synapse:
+  # --- Physiological E/I ratio (~80% excitatory in cortex) ---
+  excitatory_ratio: 0.8
+  tau_excite_ms: 5.0          # AMPA receptor
+  tau_inhibit_ms: 10.0        # GABA receptor
+  delay_min_ms: 1.0
+  delay_max_ms: 20.0
+  connection_density: 0.05    # ~5% — real brain; use scipy.sparse matrix!
+
+stdp:
+  enabled: true
+  tau_plus_ms: 20.0
+  tau_minus_ms: 20.0
+  a_plus: 0.01
+  a_minus: 0.012              # slightly larger → bias toward forgetting (stability)
+
+network:
+  n_neurons: 10000            # Month 1 benchmark target
+  backend: "numpy"            # numpy → (Week 12+) rust
+
+reward_pathway:
+  model: "RPE_dopamine"       # reward prediction error
+  baseline_dopamine: 0.1
+  learning_rate: 0.01
+
+logging:
+  level: "INFO"
+  spike_log: "data/logs/spikes.parquet"
