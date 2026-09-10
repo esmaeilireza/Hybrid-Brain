@@ -7,3 +7,5 @@
 | i7-6700HQ / 24GB | Python+NumPy+scipy | 10000 | 1000 | 212,862 neuron-ticks/s | 46.98s | 34.4 Hz |
 
 | Month 3 | RPE + distance-delta shaping + entry-only novelty + fixed start | success 100%, mean 40 steps (training goals 78/80) |
+
+| Week 12-13 | neurons-only A/B | Python 34,641,728 vs Rust 94,381,471 neuron-ticks/s | speedup 2.7x |
