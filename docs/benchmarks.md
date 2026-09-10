@@ -21,3 +21,7 @@
 | Week 15 | combined via PyO3 | Python 57,550,313 vs Rust 13,457,719 | ratio 0.23x |
 
 | Month 4 | decision agreement | 89% optimal agreement, System2-on-novel 94% |
+
+| Month 3 | RPE + distance-delta shaping + entry-only novelty + fixed start | success 100%, mean 40 steps (training goals 78/80) |
+
+| Month 4 | decision agreement | 89% optimal agreement, System2-on-novel 94% |

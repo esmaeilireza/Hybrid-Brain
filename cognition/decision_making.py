@@ -1,4 +1,4 @@
-"""Decision making - Kahneman System 1/2 with a familiarity router.
+﻿"""Decision making - Kahneman System 1/2 with a familiarity router.
 
 Design (Month 4, honestly simplified):
   - System 1 (fast): direct ValueTable lookup when the state is FAMILIAR
@@ -17,6 +17,12 @@ Biases (roadmap realism requirements):
   - Anchoring: first-encounter estimates are sticky - implemented as a
     reduced learning rate while visit_count < anchor_visits, decaying
     to the normal rate. (The first value seen anchors the estimate.)
+
+Week 18 addition (ADR-014): optional somatic marker map. Read-time
+bias only - the ValueTable is never written by emotions. The marker
+penalty is a separate additive term on utility (NOT folded into the
+outcome delta), so loss aversion cannot double-count it. All new
+parameters default to None: existing callers and tests are untouched.
 """
 from __future__ import annotations
 
@@ -28,14 +34,16 @@ class DecisionMaker:
                  familiarity_threshold: int = 1,
                  anchor_visits: int = 5,
                  loss_aversion: float = 2.0,
-                 gamma: float = 0.9) -> None:
+                 gamma: float = 0.9,
+                 somatic=None) -> None:
         self.values = value_table
         self.visits = visits if visits is not None else {}
         self.familiarity_threshold = familiarity_threshold
         self.anchor_visits = anchor_visits
         self.loss_aversion = loss_aversion
         self.gamma = gamma
-        self.last_system = 1          # which system decided last
+        self.somatic = somatic          # SomaticMarkerMap or None
+        self.last_system = 1            # which system decided last
         self._n_actions = 4
 
     # ---- router ----
@@ -46,18 +54,23 @@ class DecisionMaker:
             return 1
         return 2
 
-    # ---- System 1: direct lookup ----
-    def system1_action(self, position: tuple[int, int]) -> int:
-        v = self.values.values_at(position)
+    # ---- System 1: direct lookup (+ optional somatic bias) ----
+    def system1_action(self, position: tuple[int, int],
+                       neighbor_positions: dict | None = None) -> int:
+        v = np.array(self.values.values_at(position), dtype=float)
+        if self.somatic is not None and neighbor_positions:
+            for action, nxt in neighbor_positions.items():
+                if 0 <= action < len(v):
+                    v[action] += self.somatic.penalty(nxt)
         return int(np.argmax(v))
 
     # ---- System 2: one-step lookahead utility with loss aversion ----
     def system2_action(self, position: tuple[int, int],
-                       neighbor_values: dict[tuple[int, int], np.ndarray]
-                       ) -> int:
-        """neighbor_values: {next_position: value_vector of that
-        position}. The caller supplies the actual neighbors (grid
-        topology belongs to the world, not the decision maker)."""
+                       neighbor_values: dict[tuple[int, int], np.ndarray],
+                       neighbor_positions: dict | None = None) -> int:
+        """neighbor_values: {action: value_vector of that position}.
+        The caller supplies the actual neighbors (grid topology belongs
+        to the world, not the decision maker)."""
         best_action, best_utility = 0, -np.inf
         for action in range(self._n_actions):
             # each action maps to one neighbor by grid convention
@@ -73,6 +86,11 @@ class DecisionMaker:
                 if delta < 0:
                     delta *= self.loss_aversion   # losses weigh 2x
                 utility = self.gamma * outcome + delta
+            # somatic marker: separate bias term, never inside delta
+            if self.somatic is not None and neighbor_positions:
+                npos = neighbor_positions.get(action)
+                if npos is not None:
+                    utility += self.somatic.penalty(npos)
             if utility > best_utility:
                 best_utility, best_action = utility, action
         return best_action
@@ -89,13 +107,14 @@ class DecisionMaker:
 
     # ---- top-level decision ----
     def decide(self, position: tuple[int, int],
-               neighbor_values: dict[tuple[int, int], np.ndarray]
-               ) -> tuple[int, int]:
+               neighbor_values: dict[tuple[int, int], np.ndarray],
+               neighbor_positions: dict | None = None) -> tuple[int, int]:
         """Returns (action, system_used)."""
         system = self.route(position)
         if system == 1:
-            action = self.system1_action(position)
+            action = self.system1_action(position, neighbor_positions)
         else:
-            action = self.system2_action(position, neighbor_values)
+            action = self.system2_action(position, neighbor_values,
+                                         neighbor_positions)
         self.last_system = system
         return action, system
