@@ -13,7 +13,7 @@ Mechanism (Posner networks, simplified):
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -53,14 +53,15 @@ class AttentionSystem:
         clearly_better = scores[challenger] > scores[self.attended_idx] * 1.25
         if can_switch and (challenger != self.attended_idx and clearly_better):
             self.attended_idx = challenger
+            self.streams[self.attended_idx].dwell_cycles = 0
+
+        self.streams[self.attended_idx].dwell_cycles += 1
 
         gains = []
         for idx, stream in enumerate(self.streams):
             stream.gain = (self.attended_gain if idx == self.attended_idx
                            else self.base_gain)
-            stream.dwell_cycles += 1
             gains.append(stream.gain)
-        self.streams[self.attended_idx].dwell_cycles = 0
         return gains
 
 
