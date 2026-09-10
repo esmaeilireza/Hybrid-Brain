@@ -40,6 +40,12 @@ def main() -> None:
             nr = min(max(r + dr, 0), 19)
             nc = min(max(c + dc, 0), 19)
             values[a] = 1.0 / (1.0 + abs(goal[0] - nr) + abs(goal[1] - nc))
+        # Relative coding: rescale so best action maps near 0.9 and
+        # worst near 0.2 - absolute distances are too flat for the
+        # BG's firing-threshold discrimination (Week-6 finding).
+        vmin, vmax = values.min(), values.max()
+        if vmax > vmin:
+            values = 0.2 + 0.7 * (values - vmin) / (vmax - vmin)
         world.pending_action = bg.decide(values)
         world.step(1)
         place.step(world.agent)
