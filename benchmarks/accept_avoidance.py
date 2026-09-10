@@ -1,17 +1,15 @@
-﻿"""Month 5 acceptance harness v4 - conditioned avoidance (Week 18).
+﻿"""Month 5 acceptance harness v4.1 - conditioned avoidance (Week 18).
 
-v3 PASSED with a scripted arousal gate. v4 replaces AROUSAL_GATE with
-the real organ (regions/amygdala.py, audited):
-  - place input: one-hot over the 20x20 grid at the agent position
-  - dopamine gate: 0.0 at punishment events (conditioning opens),
-    real dopamine level otherwise
-  - amygdala.last_spikes.mean() -> EmotionEngine.amygdala_activation
-    -> fear -> somatic marker. Fear now BUILDS across episodes as
-    conditioning potentiates R's place pattern (three-factor rule).
+v4 postmortem: the PROBE was buggy - its simulated path ran through a
+DecisionMaker with a fresh empty visits dict, routing every step to
+System 2, so it tracked a lookahead path that the real eval (System 1
+over the populated visits dict) never walks. Probe picked R=(1,0)
+adjacent to START; the actual path left the other way; INCONCLUSIVE.
 
-Everything else from v3 unchanged: A/B ablation, isolated threat
-channel (punishment never enters agent.learn), R from the greedy path,
-competency gates, decision-seam eval.
+v4.1 fix: ONE greedy_eval with an optional track dict - probe and eval
+walk paths through the IDENTICAL code path. Dead code from v4 removed.
+Everything else from v4 unchanged (real amygdala in the loop, isolated
+threat channel, A/B ablation, competency + eval gates).
 """
 import sys
 from pathlib import Path
@@ -109,23 +107,18 @@ def train_episode(sim: dict, rng, ep: int, punish_cell) -> bool:
         dist_a = abs(nxt[0] - goal[0]) + abs(nxt[1] - goal[1])
 
         punished = (punish_cell is not None and nxt == punish_cell)
-        # threat channel only - agent.learn sees identical rewards
-        # in both arms (the v3 isolation that made attribution causal)
         total = world_reward + novelty + 0.2 * (dist_b - dist_a)
 
         rpe = agent.learn(pos, action, total, next_position=nxt)
         agent.nt.step()
 
-        # --- the real organ in the loop (v4) ---
         spikes = amgd.step(
             one_hot(nxt),
             dopamine_level=0.0 if punished else agent.nt.dopamine.level,
         )
-        activation = float(spikes.mean())
-
         state = engine.step(
             rpe=rpe,
-            amygdala_activation=activation,
+            amygdala_activation=float(spikes.mean()),
             distance_reduced=dist_a < dist_b,
             pos_key=nxt,
             current_cell_value=-1.0 if punished else 0.0)
@@ -144,9 +137,11 @@ def train_episode(sim: dict, rng, ep: int, punish_cell) -> bool:
     return reached
 
 
-def greedy_eval(sim: dict, punish_cell) -> None:
-    """Deterministic, NO learning, decided through the DecisionMaker
-    seam so the marker's read-time bias is active."""
+def greedy_eval(sim: dict, punish_cell,
+                track: dict | None = None) -> bool:
+    """THE one path-walker. Deterministic, no learning, decided through
+    the DecisionMaker seam (marker bias active). Used identically by
+    the probe (track=path counts) and by evaluation (track=None)."""
     world, dm, agent = sim["world"], sim["dm"], sim["agent"]
     world.reset()
     world.agent = START
@@ -161,50 +156,26 @@ def greedy_eval(sim: dict, punish_cell) -> None:
         world.step(1)
         steps += 1
         nxt = world.agent
+        if track is not None:
+            track[nxt] = track.get(nxt, 0) + 1
         if punish_cell is not None and nxt == punish_cell:
             sim["r_visits"] += 1
         if nxt == goal:
-            break
+            return True
+    return False
 
 
 def find_path_cell() -> tuple:
-    """Probe: train punishment-free, greedy-eval, pick the most-visited
-    non-terminal cell ON the deterministic path."""
+    """Probe: train punishment-free, then walk the eval-identical path
+    and pick the most-visited non-terminal cell ON it."""
     sim = make_agent(False)
     sim["world"] = GridWorldA(WORLD_CFG, seed=11)
     rng = np.random.default_rng(7)
-    for ep in range(1, 81):
+    for ep in range(1, N_TRAIN + 1):
         train_episode(sim, rng, ep, punish_cell=None)
     path_counts: dict = {}
     for _ in range(N_EVAL):
-        greedy_eval(sim, None)
-        # track path via visits delta (greedy_eval counts r only):
-    # re-count properly by tracking in a dedicated dict:
-    sim2 = make_agent(False)
-    sim2["world"] = GridWorldA(WORLD_CFG, seed=11)
-    # reuse the trained value table through a fresh agent sharing it:
-    sim2["agent"] = sim["agent"]
-    sim2["dm"] = DecisionMaker(sim["agent"].values, visits={},
-                               somatic=None)
-    path_counts = {}
-    world = sim2["world"]
-    for _ in range(N_EVAL):
-        world.reset()
-        world.agent = START
-        steps, goal = 0, world.goal
-        while not world.is_episode_done() and steps < 300:
-            pos = world.agent
-            nb_pos = {a: neighbor_of(pos, a) for a in range(4)}
-            nb_vals = {a: np.array(sim["agent"].value_signals(nb_pos[a]),
-                                   dtype=float) for a in range(4)}
-            action, _ = sim2["dm"].decide(pos, nb_vals, nb_pos)
-            world.pending_action = action
-            world.step(1)
-            steps += 1
-            nxt = world.agent
-            path_counts[nxt] = path_counts.get(nxt, 0) + 1
-            if nxt == goal:
-                break
+        greedy_eval(sim, None, track=path_counts)
     candidates = {p: c for p, c in path_counts.items()
                   if p not in (START, sim["world"].goal)}
     return max(candidates, key=candidates.get)
@@ -224,9 +195,8 @@ def main() -> None:
         sim["cons"].sleep(replay_k=50)
         eval_goals = 0
         for _ in range(N_EVAL):
-            greedy_eval(sim, r_cell)
-            if sim["world"].agent == sim["world"].goal:
-                eval_goals += 1
+            ok = greedy_eval(sim, r_cell)
+            eval_goals += int(ok)
         results[label] = {"train": hits, "eval": eval_goals,
                           "r": sim["r_visits"]}
         print(f"somatic {label}: train goals {hits}/{N_TRAIN}, "
