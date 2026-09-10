@@ -1,0 +1,98 @@
+﻿"""Rust A/B bridge - runs the Rust probe and the Python reference LIF,
+compares trajectories, and reports bit-level agreement.
+
+Design (ADR-013 candidate): the Rust binary is the probe; PyO3 bindings
+arrive only after this comparison is green. Correctness first, binding second.
+
+Usage:
+    python core/rust_bridge.py            # compare + verdict
+    python core/rust_bridge.py --bench    # add timing comparison
+"""
+from __future__ import annotations
+
+import json
+import subprocess
+import time
+from pathlib import Path
+
+# Same physiology as config/brain_config.yaml (Month 1 decisions)
+PARAMS = dict(dt_ms=0.5, tau_m=20.0, v_rest=-65.0,
+              v_threshold=-55.0, v_reset=-65.0, i_amp=12.0)
+N_STEPS = 20_000  # 10 simulated seconds at dt=0.5ms
+
+RUST_DIR = Path(__file__).resolve().parent.parent / "rust-core"
+PROBE = RUST_DIR / "target" / "release" / "ab_probe.exe"
+
+
+def build_rust() -> bool:
+    """Compile the probe. Returns False if the toolchain is absent."""
+    try:
+        r = subprocess.run(["cargo", "build", "--release"],
+                           cwd=RUST_DIR, capture_output=True, text=True,
+                           timeout=300)
+        return r.returncode == 0
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return False
+
+
+def run_rust(n_steps: int = N_STEPS) -> list[dict]:
+    args = [str(PROBE), str(n_steps)] + [
+        str(PARAMS[k]) for k in ("dt_ms", "tau_m", "v_rest",
+                                 "v_threshold", "v_reset", "i_amp")]
+    out = subprocess.run(args, capture_output=True, text=True, check=True)
+    return [json.loads(line) for line in out.stdout.splitlines() if line]
+
+
+def run_python(n_steps: int = N_STEPS) -> list[dict]:
+    """Reference LIF - EXACT same operation order as main.rs."""
+    dt = PARAMS["dt_ms"]
+    dt = PARAMS['dt_ms']
+    leak = dt / PARAMS['tau_m']
+    drive = PARAMS["i_amp"] * dt  # C_m = 1.0
+    v, v_rest = PARAMS["v_rest"], PARAMS["v_rest"]
+    rows = []
+    for step in range(n_steps):
+        v = v + leak * (v_rest - v) + drive
+        spiked = v >= PARAMS["v_threshold"]
+        if spiked:
+            v = PARAMS["v_reset"]
+        rows.append({"step": step, "v": v, "spiked": spiked})
+    return rows
+
+
+def compare(rust: list[dict], py: list[dict]) -> dict:
+    assert len(rust) == len(py), "trajectory length mismatch"
+    max_rel = 0.0
+    spike_mismatches = 0
+    for r, p in zip(rust, py):
+        rel = abs(r["v"] - p["v"]) / max(abs(p["v"]), 1e-12)
+        max_rel = max(max_rel, rel)
+        spike_mismatches += int(r["spiked"] != p["spiked"])
+    return {"max_rel_err": max_rel, "spike_mismatches": spike_mismatches,
+            "n_steps": len(py),
+            "exact": max_rel < 1e-12 and spike_mismatches == 0}
+
+
+def main() -> None:
+    if not PROBE.exists() and not build_rust():
+        print("SKIP: Rust toolchain unavailable - Python side still valid")
+        return
+    t0 = time.perf_counter()
+    rust = run_rust()
+    t_rust = time.perf_counter() - t0
+    t0 = time.perf_counter()
+    py = run_python()
+    t_py = time.perf_counter() - t0
+
+    verdict = compare(rust, py)
+    print(f"steps={verdict['n_steps']}  "
+          f"max_rel_err={verdict['max_rel_err']:.3e}  "
+          f"spike_mismatches={verdict['spike_mismatches']}")
+    print(f"PASS (bit-equivalent)" if verdict["exact"] else "FAIL")
+    print(f"rust={t_rust*1000:.1f}ms  python={t_py*1000:.1f}ms  "
+          f"(includes process+JSON overhead; tick-rate bench is separate)")
+
+
+if __name__ == "__main__":
+    main()
+

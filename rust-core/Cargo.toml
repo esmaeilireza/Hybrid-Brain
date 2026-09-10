@@ -1,15 +1,17 @@
 ﻿[package]
-name = "hybrid-brain-core"
-version = "0.1.0"
+name = "hybrid_brain_core"
+version = "0.4.0"
 edition = "2021"
-description = "Hot-loop neuronal simulation core - PyO3-ready, ARM64-friendly"
 
-[lib]
-crate-type = ["cdylib", "rlib"]
-
-[dependencies]
-pyo3 = { version = "0.22", optional = true, features = ["extension-module"] }
+# Library + both bins are auto-discovered (src/lib.rs, src/bin/*.rs).
+# Bins import the lib by package name: hybrid_brain_core::neurons, ::synapses.
 
 [features]
-default = []
+# Gates src/python_bindings.rs. Enabled only during maturin builds:
+#   maturin develop --release --features python-bindings
+# NOTE: pyo3 version gets pinned for real in the maturin week (14-15);
+#       it compiles only when this feature is on.
 python-bindings = ["dep:pyo3"]
+
+[dependencies]
+pyo3 = { version = "0.22", optional = true }

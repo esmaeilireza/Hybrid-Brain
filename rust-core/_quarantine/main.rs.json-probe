@@ -1,0 +1,31 @@
+﻿//! A/B probe: reference LIF neuron, identical formula to core/neuron.py.
+//!
+//! Physiology (config/brain_config.yaml): tau_m=20ms, v_rest=-65mV,
+//! v_threshold=-55mV, v_reset=-65mV.
+//!
+//! Output: one JSON object per line: {"step": n, "v": mV, "spiked": bool}
+//! Parsed by core/rust_bridge.py; compared with rel_tol=1e-12.
+
+use std::env;
+
+fn main() {
+    // args: n_steps dt_ms tau_m v_rest v_threshold v_reset i_amp
+    let a: Vec<f64> = env::args().skip(1).map(|s| s.parse().unwrap()).collect();
+    let (n_steps, dt, tau_m, v_rest, v_thresh, v_reset, i_amp) =
+        (a[0] as u64, a[1], a[2], a[3], a[4], a[5], a[6]);
+
+    let leak = dt / tau_m;
+    let drive = i_amp * dt; // C_m = 1.0
+
+    let mut v = v_rest;
+    for step in 0..n_steps {
+        // EXACT operation order matters: leak, then drive, one accumulation.
+        v = v + leak * (v_rest - v) + drive;
+
+        let spiked = v >= v_thresh;
+        if spiked {
+            v = v_reset;
+        }
+        println!("{{\"step\": {}, \"v\": {}, \"spiked\": {}}}", step, v, spiked);
+    }
+}
