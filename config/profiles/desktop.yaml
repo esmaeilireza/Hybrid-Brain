@@ -1,0 +1,8 @@
+# Ì∂•Ô∏è Desktop profile ‚Äî i7-6700HQ / 24GB RAM / GTX 960M
+extends: "../brain_config.yaml"
+network:
+  n_neurons: 10000
+visualization:
+  backend: "pyvista"
+  point_cloud_max: 50000
+  resolution: [1280, 720]     # 1080p not 4K ‚Äî GTX 960M limitation
