@@ -1,1 +1,1 @@
-"""Hybrid-Brain neural core."""
+"""Neural network core of Hybrid-Brain."""
