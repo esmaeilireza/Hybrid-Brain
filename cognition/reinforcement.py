@@ -43,13 +43,23 @@ class RPEAgent:
         return self.nt.dopamine.level
 
     def learn(self, position: tuple[int, int], action: int,
-              actual_reward: float) -> float:
-        """Full cycle: RPE -> dopamine -> value update. Returns RPE."""
-        rpe = self.compute_rpe(position, action, actual_reward)
+              actual_reward: float,
+              next_position: tuple[int, int] | None = None) -> float:
+        """Full cycle: RPE -> dopamine -> value update.
+        next_position enables the TD bootstrap: target = r + gamma*max(V(s')).
+        Bootstrapping is MANDATORY for maze credit assignment - without it
+        only the goal cell ever learns (found in Month 3 acceptance).
+        Terminal steps pass next_position=None (target = r)."""
+        gamma = 0.9
+        if next_position is not None:
+            bootstrap = gamma * float(self.values.values_at(next_position).max())
+        else:
+            bootstrap = 0.0
+        expected = float(self.values.values_at(position)[action])
+        self.last_rpe = (actual_reward + bootstrap) - expected
         self.dopamine_update()
-        # value update scales with RPE (standard TD(0) form)
-        self.values.reinforce(position, action, rpe * 5.0)
-        return rpe
+        self.values.reinforce(position, action, self.last_rpe * 5.0)
+        return self.last_rpe
 
     def value_signals(self, position: tuple[int, int]) -> np.ndarray:
         """Learned value signals for BG selection - replaces the

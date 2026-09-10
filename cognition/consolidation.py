@@ -36,7 +36,7 @@ class ValueTable:
         if key not in self.table:
             self.table[key] = self.rng.uniform(0.0, 0.1, self.n_actions)
         self.table[key][action] += self.lr * amount
-        self.table[key] = np.clip(self.table[key], 0.0, 2.0)
+        self.table[key] = np.clip(self.table[key], -2.0, 2.0)
 
 
 class Consolidation:
