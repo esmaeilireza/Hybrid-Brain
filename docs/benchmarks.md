@@ -35,3 +35,11 @@
 - Harness lesson (3 versions): v1 false-positive -> competency gate rule;
   v2 confound (punishment in agent.learn for both arms) -> isolated threat
   channel; v3 valid. Acceptance numbers without baseline competence are noise.
+
+## Week 18 final - avoidance with REAL amygdala (v4.1, tag v0.4.2-week18-avoidance)
+- R=(0,1) selected by the eval-identical greedy path walker (v4 probe bug fixed)
+- Train: 77/80 both arms | Eval goals: 10/10 both arms
+- R-visits (deterministic eval): somatic ON = 0, OFF = 10
+- VERDICT: ACCEPTED - 100% avoidance, zero navigation cost, amygdala-driven
+- Chain complete, no stand-ins: punishment -> amygdala (3-factor, dopamine-
+  gated) -> fear -> somatic marker (read-time bias) -> avoidance
