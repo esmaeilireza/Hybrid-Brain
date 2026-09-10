@@ -1,1 +1,1 @@
-﻿"""Emotional systems - engine, motivation, personality, mood."""
+"""Emotional systems."""

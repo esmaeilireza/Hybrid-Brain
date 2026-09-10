@@ -1,10 +1,15 @@
 ﻿"""Emotion engine - six Ekman emotions, Valence-Arousal map,
 and integration hooks (flashbulb, somatic markers, arousal gain).
 
-Timescale hierarchy (homework, Week 17 - GRADED):
+Timescale hierarchy (ADR-012):
   dopamine:  tau ~100ms - transient credit assignment
   emotions:  tau 2-30s  - behavioral priors (this module)
   moods:     tau ~hours - slow baselines (emotions/mood.py, Week 20)
+
+Update law: pure exponential relaxation level += (1-decay)*(target-level).
+NO arbitrary damping factors: a multiplicative fudge (e.g. *0.5) makes
+levels collapse to baseline independent of tau and INVERTS the hierarchy
+- caught by test_timescale_hierarchy (regression tripwire, fired once).
 """
 from __future__ import annotations
 
@@ -61,9 +66,8 @@ class EmotionEngine:
              distance_reduced: bool = True,
              current_cell_value: float = 0.0,
              pos_key=None) -> dict:
-        # --- drives from existing project signals ---
         joy_drive = max(rpe, 0.0)
-        fear_drive = amygdala_activation          # BUGFIX: was undefined
+        fear_drive = amygdala_activation
 
         if rpe < 0:
             self._neg_streak += 1
@@ -77,14 +81,12 @@ class EmotionEngine:
             self._blocked_streak = max(0, self._blocked_streak - 1)
         anger_drive = min(self._blocked_streak / 15.0, 1.0)
 
-        # BUGFIX: pos_key now a real parameter; visits accumulate
         disgust_drive = 0.0
         if pos_key is not None and current_cell_value < -0.5:
             self._neg_cell_visits[pos_key] = \
                 self._neg_cell_visits.get(pos_key, 0) + 1
             disgust_drive = min(self._neg_cell_visits[pos_key] / 10.0, 1.0)
 
-        # --- dynamics (correct exponential relaxation) ---
         self.joy.step(joy_drive)
         self.fear.step(fear_drive)
         self.sadness.step(sadness_drive)
