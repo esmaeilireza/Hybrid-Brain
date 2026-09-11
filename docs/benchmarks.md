@@ -107,3 +107,10 @@
 - First narration: "I am perched at position [3,4]... attentively navigate
   fear at 0.55 and joy at a mere 0.1" - narration only, no decisions (ADR-018)
 - 103 passed, 0 skipped
+
+## Week 24 addendum - emotion monitor + narration integration
+- tools/emotion_monitor.py: live 6-emotion dashboard (struggle/reward)
+- struggle scenario: sadness 0->0.16 (tau=30s), anger 0->0.30 (tau=15s,
+  faster - blocked-escape profile), valence -0.36, arousal 0.86
+- Narration reflects dominant emotion: "feeling anger at 0.31" (ADR-018
+  telemetry-in-language, live-verified)
