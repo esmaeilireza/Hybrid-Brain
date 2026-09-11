@@ -79,3 +79,19 @@
 - Credits: friend's output-diffing caught paste failures 3x; friend's
   drowning hypothesis drove the world-pain lever; friend's trait-in-reward
   fix was rejected per ADR-015 (correctly).
+
+## Week 21 FINAL - Cortex6 acceptance COMPLETE (97 passed, zero asterisks)
+- w_ff=45 default: all-layers-in-band | gradient L0>L5 | stimulus
+  contrast >0.6 (baseline-first design) | 1200-tick stability
+- L5 "finding" ROOT-CAUSED: v1 measured the ON transient tail as OFF
+  (50-tick propagation lag through 6 EMA-staged layers). Baseline-first
+  redesign (60-tick quiescence -> OFF -> 40-tick warm-up -> ON) resolved
+  it. Credit: friend's propagation-lag hypothesis, confirmed.
+- Vision pipeline: MobileNet 576-dim features, f-I checklist arithmetic
+  in docstring, VisualWorld World-contract compliant, GL verified on
+  960M, stale-frame bug fixed (forced render before screenshot).
+- Week 21 harness lineage recorded: units bug, pulse starvation,
+  non-persistent EMA, patch-on-patch corruption, regex pattern miss,
+  assert-message split - 12+ incidents, every one caught by a gate,
+  each one became a standing rule (builder-only writes, version-header
+  check, assert-guarded patchers, red-commit policy).
