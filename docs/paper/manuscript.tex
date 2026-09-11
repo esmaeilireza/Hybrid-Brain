@@ -1,0 +1,50 @@
+% Hybrid-Brain arXiv manuscript skeleton (W28, ADR-020).
+% Target: cs.AI preprint -> professor review -> BICA/ICANN submission.
+% Every section comment lists the ADR/figure/code that feeds it.
+\documentclass[11pt]{article}
+\usepackage{graphicx,hyperref,booktabs}
+\title{Hybrid-Brain: A Test-Driven Spiking Cognitive Architecture
+        Integrating Reward Learning, Affect, Personality and Language}
+\author{Reza Esmaeili}
+\begin{document}
+\maketitle
+\begin{abstract}
+% 150 words: integration-first architecture, test-driven (111 tests),
+% measurable behavioral acceptances, honest scope (computational,
+% not phenomenal). One sentence each: spiking cortex, RPE learning,
+% affect, personality injection, habit dissociation, EEG proxy.
+\end{abstract}
+\section{Introduction}
+% The integration gap: simulators (Brian2/NEST) vs cognitive agents
+% (ACT-R, Generative Agents) - neither connects spikes to affect to
+% behavior. Our claim: integration-first, literature-traced.
+\section{Related Work}
+% Nengo/Spaun (Eliasmith 2012 Science), ACT-R/SOAR, Generative
+% Agents (Park 2023), emotion models (FLAME/OCC). Comparison table.
+\section{Architecture}
+% 2.1 Neural core (LIF, synapses) - validated vs Brian2
+% 2.2 Regions: thalamus, hippocampus, amygdala, cortex6, BG
+%     (Table 1 = docs/neuroscience_mapping.md)
+% 2.3 Cognitive: attention (Posner), memory (Baddeley), decision
+%     (Kahneman), reinforcement (Schultz)
+% 2.4 Affect: emotions + somatic markers (Damasio), motivation,
+%     personality injection (ADR-016)
+% 2.5 Behavior: habits (ADR-019), cerebellum, language boundary
+%     (ADR-018)
+\section{Methods}
+% f-I calibration protocol (W21: measured threshold 10-20 drive,
+% superseded computed 0.93 - data over derivation)
+% Deterministic-reconciliation and competency-gate disciplines
+\section{Experiments and Results}
+% Fig1 emotion dynamics | Fig2 cocktail party | Fig3 habit
+% dissociation | Fig4 somatic marker | Fig5 navigation
+% (1.50->0.50) | Fig6-7 EEG spectrum (beta x1.94; gamma limitation
+% stated)
+\section{Limitations}
+% Computational not phenomenal; rat-scale abstractions; gamma
+% baseline limitation; simulated EEG proxy; Month 7 scope cuts
+% (ADR-006, ADR-020)
+\section{Reproducibility}
+% See docs/paper/reproducibility.md; seed registry; 111 tests
+\section{Conclusion}
+\end{document}
