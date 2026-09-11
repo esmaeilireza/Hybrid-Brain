@@ -95,3 +95,15 @@
   assert-message split - 12+ incidents, every one caught by a gate,
   each one became a standing rule (builder-only writes, version-header
   check, assert-guarded patchers, red-commit policy).
+
+## Week 22 - Cocktail Party + Language narrator (ADR-018)
+- Auditory stream calibrated to Week 21 f-I data (drive 2.5 fired nothing;
+  30 fires ~0.7/tick) - the calibration test caught my contradicting comment
+- Cocktail Party observable: attended gain 3x; loud auditory event steals
+  attention after dwell (test-verified)
+- LanguageModel protocol: RuleBasedLanguage (deterministic default) +
+  OllamaLocal (qwen2.5:3b imported from user gguf, CPU inference ~9 tok/s,
+  models on D:\prerequisite\ollama-models)
+- First narration: "I am perched at position [3,4]... attentively navigate
+  fear at 0.55 and joy at a mere 0.1" - narration only, no decisions (ADR-018)
+- 103 passed, 0 skipped
