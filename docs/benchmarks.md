@@ -43,3 +43,17 @@
 - VERDICT: ACCEPTED - 100% avoidance, zero navigation cost, amygdala-driven
 - Chain complete, no stand-ins: punishment -> amygdala (3-factor, dopamine-
   gated) -> fear -> somatic marker (read-time bias) -> avoidance
+
+## Week 19 - Satiation curve, isolated (ADR-015)
+- bench_satiation.py v2: value table frozen, RPE constant 1.0, plain arm
+  flat (control OK) vs satiated arm declining 1.0 -> 0.2 floor over 12 reps
+- Measured factors: 1.0, 0.667, 0.5, 0.4, 0.333, 0.286, 0.25, 0.222, 0.2
+  (floor hit at rep 9) - matches closed form 1/(1+0.5n) exactly
+- Decline: 80% (predicted 80%)
+- v1 postmortem: first benchmark was a false positive - TD-learning
+  shrinkage read as "satiation" (arms identical, verdict 102% with
+  negative values). New rule: a mechanism benchmark needs a FLAT
+  control arm, or it measures the environment, not the mechanism.
+- MotivationSystem (energy>safety>curiosity) + Curiosity (0.5/(1+n/3),
+  saturating) unit-verified; behavioral integration in GridWorld-B
+  (Week 20, per ADR-007)
