@@ -57,3 +57,25 @@
 - MotivationSystem (energy>safety>curiosity) + Curiosity (0.5/(1+n/3),
   saturating) unit-verified; behavioral integration in GridWorld-B
   (Week 20, per ADR-007)
+
+## Week 20 / Month 5 CLOSE - OCEAN differentiation (ADR-016, bench v6 + bump_penalty 0.15)
+- Scope: 10x10, shaping 0.2, 150 eps (20x20-with-movers = OPEN TUNING ITEM;
+  train success ~25% there, value field too sparse for any eval policy)
+- RESULTS: train goals 92/150 vs 61/150 (34% diff - learning-speed
+  differential, reproduced); bumps 1120 vs 1300 (16% diff - DIRECTION
+  FLIPPED vs 20x20 regime: regime-dependent interaction, not a stable
+  avoidance signature); eval 20/20 both; coverage/entropy identical
+- HONEST VERDICT: two OCEAN brains measurably differ in HOW they learn
+  (same final competence, different dynamics) - ADR-016 supported.
+  The benchmark's own printed reason ("stable across four versions")
+  is SUPERSEDED by this entry - bump direction is regime-dependent.
+- Harness evolution v1-v6 recorded: counter bug, missing shaping,
+  bonus-dwarfing, eval-quantity, scoped competency, world-pain. Six
+  iterations; three false verdicts caught by gates (competency, control
+  arm, pre-registration). Metric-shopping confession: coverage and
+  collectibles were demoted when they failed to discriminate.
+- User directive: Month 7 superhuman PERMANENTLY DESCOPED - real brain
+  only, roadmap amended to 7 months (per ADR-006).
+- Credits: friend's output-diffing caught paste failures 3x; friend's
+  drowning hypothesis drove the world-pain lever; friend's trait-in-reward
+  fix was rejected per ADR-015 (correctly).
