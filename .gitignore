@@ -13,6 +13,7 @@ data/logs/*
 data/assets/*
 !data/logs/.gitkeep
 !data/assets/.gitkeep
+!data/logs/history.html
 
 # --- Rust ---
 rust-core/target/
