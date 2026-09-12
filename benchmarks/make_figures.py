@@ -7,12 +7,14 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+plt.rcParams["pdf.fonttype"] = 42
 OUT = Path(__file__).resolve().parent.parent / "docs" / "figures"
 OUT.mkdir(parents=True, exist_ok=True)
 
 def _save(fig, name):
     fig.tight_layout()
-    fig.savefig(OUT / name, dpi=300)
+    fig.savefig(OUT / name, dpi=300, bbox_inches="tight")
+    fig.savefig(OUT / (Path(name).stem + ".pdf"), bbox_inches="tight")
     plt.close(fig)
     print("saved:", name)
 
