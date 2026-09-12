@@ -1,0 +1,481 @@
+﻿<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Hybrid-Brain | Project Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f; --surface: #12121a; --surface-hover: #1a1a24;
+    --border: #2a2a35; --text: #e4e4e7; --text-dim: #8b8b9e;
+    --accent: #3b82f6; --accent-glow: rgba(59, 130, 246, 0.15);
+    --success: #10b981; --pink: #f472b6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif; line-height: 1.6;
+    padding: 40px 20px;
+  }
+  .dashboard { max-width: 960px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 50px; }
+  .header h1 {
+    font-size: 2.5rem; font-weight: 700; margin-bottom: 8px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .header p { color: var(--text-dim); font-size: 0.95rem; }
+  
+  /* Month Accordion */
+  .month {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; margin-bottom: 16px; overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .month[open] { box-shadow: 0 0 30px var(--accent-glow); border-color: var(--accent); }
+  .month > summary {
+    list-style: none; cursor: pointer; display: flex; align-items: center;
+    gap: 16px; padding: 20px 24px; font-size: 1.1rem; font-weight: 600;
+  }
+  .month > summary::-webkit-details-marker { display: none; }
+  .m-badge {
+    background: var(--accent); color: #fff; font-size: 0.8rem; font-weight: 700;
+    padding: 4px 12px; border-radius: 8px; letter-spacing: 0.5px;
+  }
+  .m-title { flex: 1; }
+  .m-state { font-size: 1.2rem; }
+  
+  /* Week Accordion */
+  .m-body { padding: 10px 20px 20px; background: #0d0d14; }
+  .week {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; margin-bottom: 12px;
+  }
+  .week > summary {
+    list-style: none; cursor: pointer; display: flex; align-items: center;
+    gap: 12px; padding: 14px 18px; flex-wrap: wrap;
+  }
+  .week > summary::-webkit-details-marker { display: none; }
+  .week > summary:hover { background: var(--surface-hover); }
+  .w-num {
+    font-family: monospace; background: #2a2a35; color: var(--accent);
+    padding: 2px 8px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
+  }
+  .w-title { font-weight: 500; flex: 1; }
+  .w-meta { color: var(--text-dim); font-size: 0.8rem; }
+  .tag {
+    background: rgba(59, 130, 246, 0.15); color: var(--accent); border: 1px solid rgba(59, 130, 246, 0.3);
+    padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-family: monospace;
+  }
+  
+  /* Week Body Content */
+  .w-body { padding: 16px 24px 24px; border-top: 1px dashed var(--border); }
+  .narrative { color: var(--text-dim); margin-bottom: 16px; font-size: 0.95rem; }
+  .punchline {
+    color: var(--success); font-weight: 500; font-size: 0.95rem;
+    padding-left: 12px; border-left: 3px solid var(--success); margin-bottom: 16px;
+  }
+  
+  /* Commits */
+  .commits { margin-top: 12px; }
+  .commits summary { cursor: pointer; color: var(--text-dim); font-size: 0.85rem; font-weight: 500; }
+  .c-list { margin-top: 10px; max-height: 200px; overflow-y: auto; }
+  .commit {
+    font-size: 0.8rem; color: var(--text-dim); padding: 6px 0;
+    border-bottom: 1px solid #1a1a24; display: flex; gap: 8px;
+  }
+  .commit code { color: var(--pink); font-family: monospace; }
+  .commit .date { margin-left: auto; opacity: 0.6; font-size: 0.75rem; }
+</style></head><body>
+<div class="dashboard">
+  <div class="header">
+    <h1>ðŸ§  Hybrid-Brain Architecture</h1>
+    <p>Interactive Project History â€¢ Generated 2026-09-11 23:32</p>
+  </div>
+  
+        <details class="month" >
+            <summary>
+                <span class="m-badge">M1</span>
+                <span class="m-title">Neural Core + Environment</span>
+                <span class="m-state">âœ…</span>
+            </summary>
+            <div class="m-body">
+            <details class="week">
+                <summary>
+                    <span class="w-num">W01</span>
+                    <span class="w-title">Infrastructure & phase zero</span>
+                    <span class="w-meta">56 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Folder tree, core/interfaces.py: the immutable Sensor/Actuator/World contract. brain_config.yaml with REAL physiology. BrainClock, git+pre-commit. ADR-001/002.</p>
+                    <p class="punchline">ðŸŽ¯ First line of the contract that every later module obeyed.</p>
+                    <details class="commits"><summary>View all commits (56)</summary><div class="c-list"><div class="commit"><code>28b8996</code> Initial commit <span class="date">2026-09-09</span></div><div class="commit"><code>a982b10</code> Phase 0: architecture contracts (Sensor/Actuator/World), ADR-001/002, project skeleton, physiological config <span class="date">2026-09-10</span></div><div class="commit"><code>58202ee</code> chore: normalize line endings via .gitattributes (Windows CRLF fix) <span class="date">2026-09-10</span></div><div class="commit"><code>46106da</code> ADR-003: time-driven Euler + linear sub-tick spike interpolation <span class="date">2026-09-10</span></div><div class="commit"><code>bde84be</code> Week 2: fix missing post-spike voltage reset (caught by refractory test); f-I validation < 5%; ADR-003 amendment 2 <span class="date">2026-09-10</span></div><div class="commit"><code>ae16c6e</code> Week 2 final: refractory off-by-one fixed; f-I validation vs analytic theory <span class="date">2026-09-10</span></div><div class="commit"><code>bebf2ba</code> Week 3: self-anchoring sys.path for direct script runs; E/I balance acceptance <span class="date">2026-09-10</span></div><div class="commit"><code>2fa64d9</code> Week 3 rev 2: explicit synapse polarity (fixes wrong-sign weights in pure E/I groups); distribution-aware E/I acceptance; i2e sign no longer compensated by caller <span class="date">2026-09-10</span></div><div class="commit"><code>04f3815</code> Week 4: real 10k-neuron benchmark replaces placeholder; baseline throughput recorded in docs/benchmarks.md <span class="date">2026-09-10</span></div><div class="commit"><code>3ff10e3</code> Week 4: 10k-neuron benchmark baseline (74,642 neuron-ticks/s, mean rate 94.5 Hz); hot-regime finding motivates ADR-004 synaptic scaling <span class="date">2026-09-10</span></div><div class="commit"><code>122e9b8</code> Week 5: ADR-004 (homeostatic synaptic scaling); visualization/heatmap_2d.py - first debugging eye <span class="date">2026-09-10</span></div><div class="commit"><code>37b5e5f</code> Week 5: thalamus deterministic contract test (projection-read selectivity replaces statistical guess); gain calibrated to Week-2 f-I curve <span class="date">2026-09-10</span></div><div class="commit"><code>8d72942</code> Week 5: amygdala conditioning scaffold (dopamine-gated, pending LifPopulation hooks), week5 demo with place raster + region heatmap <span class="date">2026-09-10</span></div><div class="commit"><code>eb56da1</code> Week 6: amygdala conditioning verified (gain + honest 2s pairing); hypothalamus homeostatic needs; dopamine-as-argument contract <span class="date">2026-09-10</span></div><div class="commit"><code>d4b2f7a</code> Week 6 closed: PFC defaults from sweep (0.25/3.0/4.0 -> ~14.6 Hz delay); BG decide(); tuning study archived in docs/ <span class="date">2026-09-10</span></div><div class="commit"><code>aa14300</code> Week 6 addendum: relative value coding in demo (absolute distances too flat for BG threshold discrimination); navigation verified <span class="date">2026-09-10</span></div><div class="commit"><code>2685290</code> Week 7: cortex settle window (friend-review finding: single-tick Euler pulse moves v only 5% of gap - amplitude was never the issue, duration was); Month 2 closed <span class="date">2026-09-10</span></div><div class="commit"><code>80da5d8</code> Week 7 addendum: adaptive smoothing kernel (convolve mode=same pads short traces to kernel length) <span class="date">2026-09-10</span></div><div class="commit"><code>6b9916b</code> Week 9: episodic memory (reward-ranked, capacity-evicting) + working memory (recency, 7+-2); ChromaDB deferred behind stable interface <span class="date">2026-09-10</span></div><div class="commit"><code>be5da37</code> Week 9 p2: consolidation-as-replay (top-rewarded episodes -> ValueTable during sleep); three-factor memory->behavior bridge <span class="date">2026-09-10</span></div><div class="commit"><code>be11afc</code> Week 11: test_reinforcement.py rewritten cleanly (previous patch escaping produced unterminated string); all RPE dynamics assertions verified <span class="date">2026-09-10</span></div><div class="commit"><code>ac687bf</code> chore: remove shell-artifact junk files (created by accidental redirects) <span class="date">2026-09-10</span></div><div class="commit"><code>50eef5c</code> Month 3 closed: shaping scale 0.1 (converged V 8.9 vs clip 2.0 caused universal saturation + argmax tie collapse - A/B proved consolidation innocent); stabilization metric (mean last5 vs first3) <span class="date">2026-09-10</span></div><div class="commit"><code>4ac9a52</code> Month 3 closed: maze learned by RPE dopamine pathway (Schultz), TD bootstrap gamma=0.9, distance-delta shaping 0.2, entry-only novelty, random tie-break. Training: 78/80 goal hits, 300->~50 steps. Eval: 100% success, 40 steps (optimal 38, deterministic x10). Consolidation suspended pending ADR-005. External review credited. <span class="date">2026-09-10</span></div><div class="commit"><code>cb06666</code> Week 12 checkpoint: ADR-005 (consolidation redesign spec), ADR-006 (Month 7 scope: core features only), ADR-007 (GridWorld-B deferral + eval scope) <span class="date">2026-09-10</span></div><div class="commit"><code>94e2afc</code> Week 12: neurons.rs (LIF port, ADR-003 semantics mirrored, ADR-002 ARM64-safe); checkpoint ADRs 005/006/007 <span class="date">2026-09-10</span></div><div class="commit"><code>321b695</code> rust-core: build passed and linker resolved <span class="date">2026-09-10</span></div><div class="commit"><code>03a6c89</code> Week 13: attention gain modulation + Global Workspace queue (homework design: fixed windows, gain varies, dwell+hysteresis anti-flicker) <span class="date">2026-09-10</span></div><div class="commit"><code>2fcf274</code> Week 13 closed: attention gain modulation + Global Workspace queue (52 passed, 1 xfail) <span class="date">2026-09-10</span></div><div class="commit"><code>48a0823</code> Week 12-13: rust A/B bridge bit-exact [paste verdict]; neurons-only speed benchmark Python [x] vs Rust [y] neuron-ticks/s, speedup [z]x <span class="date">2026-09-10</span></div><div class="commit"><code>db70448</code> Week 14: decision_making System 1/2 (familiarity router, one-step lookahead System 2, loss aversion lambda=2, anchoring via decaying lr) <span class="date">2026-09-10</span></div><div class="commit"><code>71d908d</code> chore: remove temporary writer scripts (artifacts of file-creation pattern) <span class="date">2026-09-10</span></div><div class="commit"><code>2e7811c</code> Week 14 closed: decision_making System 1/2 (router, loss aversion, anchoring) + synapses.rs A/B bit-exact (0.000e+00) + combined benchmark 64.99M neuron-ticks/s (ADR-008 Option A) <span class="date">2026-09-10</span></div><div class="commit"><code>9733682</code> Week 15: PyO3 bindings importable (version field fixed); combined Rust benchmark [paste]; decision agreement [paste]% Ã¢â‚¬â€ Month 4 closed <span class="date">2026-09-10</span></div><div class="commit"><code>9d9304d</code> Week 15: decision agreement [REAL]% (Month 4 headline passed); PyO3 combined benchmark [REAL_PY] vs [REAL_RS] neuron-ticks/s Ã¢â‚¬â€ acceptance numbers recorded <span class="date">2026-09-10</span></div><div class="commit"><code>5b71ca9</code> Week 17: emotion engine - 6 Ekman emotions, V-A map, somatic/flashbulb/attention hooks; acceptance: timescale hierarchy + fear decay curve green (62 passed, 1 xfail) <span class="date">2026-09-10</span></div><div class="commit"><code>7104516</code> Week 14: Rust A/B unified on canonical line-protocol harness - crate name restored (hybrid_brain_core), python-bindings feature declared, duplicate JSON probe quarantined, pytest gate now delegates to benchmarks/ab_bridge.py (63 passed, 1 xfail) <span class="date">2026-09-10</span></div><div class="commit"><code>c4ed0bd</code> ADR-013: line-protocol boundary, one bridge, incident record <span class="date">2026-09-10</span></div><div class="commit"><code>16a8bb5</code> Week 18 p1: somatic markers (Damasio) - position-keyed read-time bias, accrual gated on punishment+arousal, extinction on safe visits; DecisionMaker optional seam (backward-compatible, Month 4 tests untouched); homework answer graded into ADR-014 draft (69 passed, 1 xfail) <span class="date">2026-09-10</span></div><div class="commit"><code>7ae9147</code> fix(somatic): extinction snaps to zero past explicit threshold (0.02) - exponential decay is asymptotic; arithmetic documented in module docstring; green-before-commit rule reinforced after red commit 16a8bb5 (69 passed, 1 xfail) <span class="date">2026-09-10</span></div><div class="commit"><code>2548516</code> Week 18 CLOSED: avoidance acceptance PASSED - A/B ablation (somatic ON/OFF, same seed), isolated threat channel (punishment -> emotion/marker only, not agent.learn), R selected from greedy path; ON 0/10 vs OFF 10/10 visits to R, eval 10/10 both arms, train 77/80. Harness evolution: v1 false positive (competency gate added), v2 confound (channel isolation), v3 valid. Month 5 first acceptance number: 100% avoidance, no navigation cost <span class="date">2026-09-11</span></div><div class="commit"><code>f70ae57</code> benchmarks.md: Week 18 avoidance acceptance recorded (100% avoidance, harness-evolution lessons) <span class="date">2026-09-11</span></div><div class="commit"><code>0ad410d</code> Week 17-18 fix: emotion engine restored to pure exponential relaxation (regression to *0.5 formula inverted the tau hierarchy - tripwire test caught it); test file restored to computed-threshold vintage (old 20-step thresholds were tuned to the broken-formula era; arousal margin 0.05, not a hair); regex source-patching banned - full-overwrite + py_compile gate only; avoidance harness v4.1 probe fix included <span class="date">2026-09-11</span></div><div class="commit"><code>67f221e</code> Week 18 CLOSED: avoidance acceptance PASSED with real amygdala - punishment -> Amygdala.step conditioning (three-factor, one-hot place input, dopamine threat gate) -> fear -> somatic marker -> avoidance; ON 0/10 vs OFF 10/10 R-visits, eval 10/10, train 77/80 both arms; harness v4.1 probe = eval-identical path walker <span class="date">2026-09-11</span></div><div class="commit"><code>b4b6f01</code> benchmarks.md: Week 18 final numbers (real-amygdala avoidance) <span class="date">2026-09-11</span></div><div class="commit"><code>2ec4379</code> Week 19 CLOSED: motivation - needs stack (energy>safety>curiosity), curiosity saturation 0.5/(1+n/3), satiation at dopamine-response level per ADR-015 (RPEAgent optional seam, default byte-identical); bench_satiation v2 ACCEPTED - measured factors match closed form exactly, 80% decline, flat control; 83 passed <span class="date">2026-09-11</span></div><div class="commit"><code>744ae78</code> Week 20 / MONTH 5 CLOSED: personality as parameter injection (ADR-016) - 88 passed; bench_ocean: learning-speed differential 34% (reproduced), bumps 16% (regime-dependent, direction documented honestly); Month 7 descoped per user directive + ADR-006; six-version harness evolution recorded <span class="date">2026-09-11</span></div><div class="commit"><code>1f7254f</code> tools: weekly_report generator - live-sourced logs in data/logs; first report covers Month 5 close (v0.5.0) <span class="date">2026-09-11</span></div><div class="commit"><code>849f024</code> Week 21 CLOSED: vision pipeline (MobileNet features, f-I checklist) + VisualWorld (World contract) + Cortex6 six-layer cortex (w_ff=45: band/gradient/stimulus-tracking/1200-tick-stability ALL green - 97 passed). L5 finding root-caused as measurement timing (baseline-first redesign); ADR-017 vision stack; builder-only write pattern + assert-guarded patchers established <span class="date">2026-09-11</span></div><div class="commit"><code>a63b9ad</code> Week 22 p1: auditory stream + Cocktail Party observable - attention arbitrates two real streams (3x attended gain; loud event steals after dwell); auditory drive calibrated against Week 21 f-I data (2.5 -> 30: my comment contradicted our own measurement and the test caught it); 100 passed <span class="date">2026-09-11</span></div><div class="commit"><code>c06c7a4</code> Week 22 CLOSED: attention arbitrates two real streams (auditory calibrated to Week 21 f-I data; Cocktail Party observable) + language layer per ADR-018 (narrator-never-decider; RuleBasedLanguage deterministic + OllamaLocal qwen2.5:3b CPU); first spoken narration; 103 passed <span class="date">2026-09-11</span></div><div class="commit"><code>900953c</code> Week 23: behavior layer - habits (ADR-019 cached S->A policy, volatility gate, invalidation detector), motor_control (real cerebellum forward model + error correction), action_selector (habit > DM > BG integration point, None-guards), ToM concept test (full social module W24); 109 passed <span class="date">2026-09-11</span></div><div class="commit"><code>969fcda</code> Week 24 / MONTH 6 CLOSED: visual-motor closed loop (best eval distance 1.50->0.50 ACCEPTED; trajectory CSV + dopamine figure); emotion monitor dashboard (struggle: sadness/anger rise, narration matches dominant emotion per ADR-018); tag v0.7.0-perception-behavior; 111 passed <span class="date">2026-09-11</span></div><div class="commit"><code>73fc17e</code> W25+W26: neuroscience mapping (20+ modules -> regions -> citations: Damasio 96, O'Keefe&Nadel 78, Schultz 97, Posner&Petersen 90, Balleine&Dickinson 98 + supporting) + 5 reproducible paper figures at 300dpi (emotion dynamics, cocktail party, habit dissociation, somatic marker, navigation); ADR-020 scientific rescope; 111 passed <span class="date">2026-09-11</span></div><div class="commit"><code>35b935d</code> W27: EEG simulator - simulated EEG proxy (stated honestly, not a scalp model); rest vs threat scenarios over live Cortex6+Amygdala; FFT band power on 10-20 montage channels; ACCEPTED: beta ratio 1.94 (gamma 0.68 - rest gamma inflated by constant 75Hz drive, documented as limitation); figs 6-7; 111 passed <span class="date">2026-09-11</span></div><div class="commit"><code>b7e11ea</code> W28 / MONTH 7 CLOSED: arXiv manuscript skeleton (sections mapped to 19 ADRs + 7 figures), seed registry (auto-scanned), reproducibility package, requirements freeze; ADR-020 scientific validation complete; tag v0.8.0-scientific-validation; 111 passed <span class="date">2026-09-11</span></div></div></details>
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W02</span>
+                    <span class="w-title">Neurons, vectorized from line one</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">LIF in NumPy, Izhikevich 20 rhythms, HH deliberately a stub. f-I curve validated against reference. Sub-tick interpolation -> ADR-003.</p>
+                    <p class="punchline">ðŸŽ¯ Acceptance: spiking above rheobase, refractory respected, f-I monotonic.</p>
+                    
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W03</span>
+                    <span class="w-title">Synapses + the environment arrives early</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Excitatory/inhibitory synapses on scipy.sparse, delays, neurotransmitters. GridWorld-A built NOW, fixing roadmap error #6.</p>
+                    <p class="punchline">ðŸŽ¯ Contract test: reward flows ONLY through Sensors.</p>
+                    
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W04</span>
+                    <span class="w-title">Network + the official metric</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">NeuralNetwork + STDP. benchmarks/bench_network.py: neuron-ticks/s becomes the project's speed metric. 10k-neuron self-organizing net.</p>
+                    <p class="punchline">ðŸŽ¯ MONTH 1 ACCEPTED.</p>
+                    
+                </div>
+            
+            <details class="week">
+                <summary>
+                    <span class="w-num">W19</span>
+                    <span class="w-title">Satiation curve, isolated (ADR-015)</span>
+                    <span class="w-meta">n commits</span>
+
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">bench_satiation.py v2: 1.0 -> 0.2 floor over 12 reps, matches closed form 1/(1+0.5n) exactly. Decline 80% (predicted 80%). v1 postmortem: false positive (TD shrinkage misread as satiation) -> standing rule: a mechanism benchmark needs a FLAT control arm.</p>
+                    <p class="punchline">&#127919; Mechanism isolated with control arm. New benchmark discipline rule.</p>
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W20</span>
+                    <span class="w-title">OCEAN differentiation / Month 5 close (ADR-016)</span>
+                    <span class="w-meta">n commits</span>
+                    <span class="tag">bench v6</span>
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Two OCEAN brains: train goals 92/150 vs 61/150 (34% learning-speed differential, reproduced); bumps direction regime-dependent (supersedes earlier claim). Six harness iterations, three false verdicts caught by gates. Superhuman month PERMANENTLY DESCOPED per ADR-006.</p>
+                    <p class="punchline">&#127919; Personalities measurably differ in HOW they learn. ADR-016 supported.</p>
+                </div>
+            </details>
+            </details></div>
+        </details>
+        <details class="month" >
+            <summary>
+                <span class="m-badge">M2</span>
+                <span class="m-title">Brain Regions</span>
+                <span class="m-state">â³</span>
+            </summary>
+            <div class="m-body">
+            <details class="week">
+                <summary>
+                    <span class="w-num">W05</span>
+                    <span class="w-title">Brain regions I</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Thalamus (deterministic relay), hippocampus (place cells), amygdala (three-factor fear conditioning), hypothalamus (homeostasis).</p>
+                    <p class="punchline">ðŸŽ¯ Week 6 test suite born (test_week6.py still green today).</p>
+                    
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W06</span>
+                    <span class="w-title">Brain regions II + EI balance</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">PFC (working memory), basal ganglia (Go/No-Go), cerebellum stub. Homeostatic synaptic scaling. EI-balance benchmark.</p>
+                    <p class="punchline">ðŸŽ¯ The attractor-instability lesson: sweep harnesses become standard.</p>
+                    
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W07</span>
+                    <span class="w-title">Connectome + version 0.1</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">core/connectome.py wires regions; signal flow visible in heatmaps. Visualization from Month 2, not Month 8.</p>
+                    <p class="punchline">ðŸŽ¯ VERSION 0.1 tagged - the first runnable brain.</p>
+                    
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W08</span>
+                    <span class="w-title">Cortex (single layer, honestly)</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Single-layer cortex; six layers deferred to Month 6. 2D debug heatmap tooling matures.</p>
+                    <p class="punchline">ðŸŽ¯ Discipline: deferral WITH an ADR, not silent scope-cut.</p>
+                    
+                </div>
+            </details></div>
+        </details>
+        <details class="month" >
+            <summary>
+                <span class="m-badge">M3</span>
+                <span class="m-title">Memory & Learning</span>
+                <span class="m-state">â³</span>
+            </summary>
+            <div class="m-body">
+            <details class="week">
+                <summary>
+                    <span class="w-num">W09</span>
+                    <span class="w-title">Memory systems</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Sensory (~500ms), working (Baddeley 7+/-2), episodic (reward-ranked), semantic, procedural lives IN the basal ganglia.</p>
+                    <p class="punchline">ðŸŽ¯ ChromaDB pending; dict-backed with stable interface.</p>
+                    
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W10</span>
+                    <span class="w-title">Reinforcement learning (RPE)</span>
+                    <span class="w-meta">0 commits</span>
+                    <span class="tag">v0.3.0-learning</span><span class="tag">v0.3.1-learning</span>
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">RPE dopamine pathway (Schultz 1997). TD bootstrap gamma=0.9 MANDATORY. Reward enters via RewardSensor only (ADR-2).</p>
+                    <p class="punchline">ðŸŽ¯ MONTH 3 TAG: v0.3.0-learning - maze learned: 78/80 train goals.</p>
+                    
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W11</span>
+                    <span class="w-title">Consolidation v1 - honest suspension</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Replay built, then Week-11 A/B proved replay magnitude dominated online learning. Consolidation SUSPENDED with ADR-005 redesign spec.</p>
+                    <p class="punchline">ðŸŽ¯ Suspended-honestly beats broken-quietly. (Redeemed in W18.)</p>
+                    
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W12</span>
+                    <span class="w-title">Rust begins + Week-12 checkpoint</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">neurons.rs - bit-exact contract. Checkpoint ADRs: 005, 006, 007.</p>
+                    <p class="punchline">ðŸŽ¯ The checkpoint rule: decide about Month 7 NOW, not in Month 7.</p>
+                    
+                </div>
+            </details></div>
+        </details>
+        <details class="month" open>
+            <summary>
+                <span class="m-badge">M4</span>
+                <span class="m-title">Cognition + Rust</span>
+                <span class="m-state">â³</span>
+            </summary>
+            <div class="m-body">
+            <details class="week">
+                <summary>
+                    <span class="w-num">W13</span>
+                    <span class="w-title">Attention + Global Workspace</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Cocktail-party gain modulation, dwell/hysteresis anti-flicker, 7+/-2 priority broadcast queue.</p>
+                    <p class="punchline">ðŸŽ¯ Week 13 closed: 52 passed, 1 xfail.</p>
+                    
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W14</span>
+                    <span class="w-title">Decision making + synapses.rs</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">System 1/2 Kahneman with familiarity router, loss aversion lambda=2.0. synapses.rs bit-exact. ADR-008 Option A.</p>
+                    <p class="punchline">ðŸŽ¯ Archaeology: second-session crate recovered, ADR-013 written.</p>
+                    
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W15</span>
+                    <span class="w-title">Month 4 headline numbers</span>
+                    <span class="w-meta">0 commits</span>
+                    <span class="tag">v0.4.0-cognition</span>
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Decision agreement with utility-optimal: 89%. System 2 invoked on novel states: 94%. PyO3 bindings importable.</p>
+                    <p class="punchline">ðŸŽ¯ MONTH 4 ACCEPTED -> tag v0.4.0-cognition.</p>
+                    
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W16</span>
+                    <span class="w-title">Language adapters (Month 4 close)</span>
+                    <span class="w-meta">0 commits</span>
+                    
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">LanguageModel Protocol: RuleBasedLanguage default. Broca/Wernicke as template-selection + semantic-slot stages.</p>
+                    <p class="punchline">ðŸŽ¯ Adapter pattern: interface stability over storage tech.</p>
+                    
+                </div>
+            </details></div>
+        </details>
+        <details class="month" open>
+            <summary>
+                <span class="m-badge">M5</span>
+                <span class="m-title">Emotions & Personality</span>
+                <span class="m-state">â³</span>
+            </summary>
+            <div class="m-body">
+            <details class="week">
+                <summary>
+                    <span class="w-num">W17</span>
+                    <span class="w-title">The emotion engine</span>
+                    <span class="w-meta">0 commits</span>
+                    <span class="tag">v0.4.1-week17-emotion</span>
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Six Ekman emotions, Valence-Arousal map, timescale hierarchy -> ADR-012. Emotion takes tau_s as a constructor param.</p>
+                    <p class="punchline">ðŸŽ¯ Homework gate PASSED: why emotions outlast dopamine. Tag v0.4.1.</p>
+                    
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W18</span>
+                    <span class="w-title">Integration: the avoidance chain</span>
+                    <span class="w-meta">0 commits</span>
+                    <span class="tag">v0.4.2-week18-avoidance</span>
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Somatic markers (Damasio). Consolidation UNSUSPENDED per ADR-005. A/B ablation: ON 0/10 vs OFF 10/10 visits to R.</p>
+                    <p class="punchline">ðŸŽ¯ ACCEPTANCE with the REAL amygdala. TAG: v0.4.2-week18-avoidance.</p>
+                    
+                </div>
+            </details></div>
+        </details>
+        <details class="month" >
+            <summary>
+                <span class="m-badge">M6</span>
+                <span class="m-title">Perception & Behavior</span>
+                <span class="m-state">â³</span>
+            </summary>
+            <div class="m-body">
+            <details class="week">
+                <summary>
+                    <span class="w-num">W21</span>
+                    <span class="w-title">Cortex6 acceptance</span>
+                    <span class="w-meta">n commits</span>
+                    <span class="tag">97 passed</span>
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">w_ff=45: all layers in 2-120 Hz band, gradient L0>L5, stimulus contrast >0.6, 1200-tick stability. L5 finding ROOT-CAUSED (50-tick propagation lag through 6 EMA layers; baseline-first redesign). Vision pipeline: MobileNet 576-dim, GL on 960M.</p>
+                    <p class="punchline">&#127919; Cortex6 accepted, zero asterisks. 12+ harness incidents -> standing rules.</p>
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W22</span>
+                    <span class="w-title">Cocktail Party + language narrator (ADR-018)</span>
+                    <span class="w-meta">n commits</span>
+                    <span class="tag">103 passed</span>
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Auditory stream calibrated to Week 21 f-I data. Attended gain 3x; loud auditory steals attention. RuleBasedLanguage default + OllamaLocal (qwen2.5:3b, ~9 tok/s CPU). First narration: 'I am perched at position [3,4]... fear at 0.55, joy at a mere 0.1.' Narration only, no decisions.</p>
+                    <p class="punchline">&#127919; The brain speaks about its own state. 103 passed, 0 skipped.</p>
+                </div>
+            </details>
+            <details class="week">
+                <summary>
+                    <span class="w-num">W24</span>
+                    <span class="w-title">Emotion monitor + narration integration</span>
+                    <span class="w-meta">n commits</span>
+
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">tools/emotion_monitor.py: live 6-emotion dashboard. Struggle scenario: sadness 0->0.16 (tau=30s), anger 0->0.30 (tau=15s, blocked-escape profile), valence -0.36, arousal 0.86. Narration reflects dominant emotion: 'feeling anger at 0.31.'</p>
+                    <p class="punchline">&#127919; Telemetry-in-language, live-verified.</p>
+                </div>
+            </details>
+            </div>
+        </details>
+        <details class="month" >
+            <summary>
+                <span class="m-badge">M7</span>
+                <span class="m-title">Science Consolidation (superhuman descoped, ADR-006)</span>
+                <span class="m-state">â³</span>
+            </summary>
+            <div class="m-body">
+            <details class="week">
+                <summary>
+                    <span class="w-num">W27</span>
+                    <span class="w-title">EEG spectrum</span>
+                    <span class="w-meta">n commits</span>
+
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">Beta threat/rest ratio: 1.72 (criterion > 1.2). Gamma approximation documented as known limitation (fig7 caption). Superhuman tier descoped per ADR-006; effort redirected to publication-grade evidence.</p>
+                    <p class="punchline">&#127919; Neural-oscillation level evidence measured.</p>
+                </div>
+            </details>
+            </div>
+        </details>
+        <details class="month" >
+            <summary>
+                <span class="m-badge">M8</span>
+                <span class="m-title">Polish & Product</span>
+                <span class="m-state">â³</span>
+            </summary>
+            <div class="m-body">
+            <details class="week">
+                <summary>
+                    <span class="w-num">W30</span>
+                    <span class="w-title">Q6 control condition: ablation, 3 seeds</span>
+                    <span class="w-meta">n commits</span>
+                    <span class="tag">111 passed</span>
+                </summary>
+                <div class="w-body">
+                    <p class="narrative">benchmarks/ablation_somatic.py: pre-declared criterion (<=50% of ep1-5 baseline, 5-episode sustained). ON [56,60,36] vs OFF [60,60,60]; mean 50.7 vs 60.0 -> 16% advantage, ON wins 3/3. OFF had higher baselines in all seeds -> advantage conservative. Postmortem: v1 greedy-probe-on-zeroed-table collapsed criterion -> redesign rule: baseline must come from organic training behavior. Unmeasured 2.1x claim RETRACTED (ADR-015). Complements Week-18: 0/10 vs 10/10 R-visits, zero navigation cost.</p>
+                    <p class="punchline">&#127919; Q6 answered with a real ablation, not an argument. W30 closed.</p>
+                </div>
+            </details>
+            </div>
+        </details>
+</div>
+</body></html>
