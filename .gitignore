@@ -22,3 +22,7 @@ rust-core/target/
 .vscode/
 .DS_Store
 Thumbs.db
+
+!data/logs/history.html
+
+!data/logs/history.html
